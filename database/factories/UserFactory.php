@@ -23,12 +23,24 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $username = fake()->userName();
         return [
-            'name' => fake()->name(),
+            'username' => $username,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'phone' => fake()->phoneNumber(),
+            'country' => fake()->country(),
+            'address' => fake()->streetAddress(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
+            'birthdate' => fake()->dateTimeBetween('-50 years', '-18 years')->format('Y-m-d'),
+            'bio' => fake()->sentence(10),
+            'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/png?seed=' . $username,
         ];
     }
 
