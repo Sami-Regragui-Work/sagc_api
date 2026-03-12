@@ -14,6 +14,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        Auth::shouldUse('api');
+    }
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -28,22 +32,29 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        /** @var Auth $auth */
-        $auth = auth('api');
-        
-        if (!$token = $auth->attempt($credentials)) {
+
+        if (!$token = Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
 
-        $user = auth('api')->user();
+        $user = Auth::user();
 
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
             'type' => 'bearer',
             'user' => new UserResource($user),
+        ], 200);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return response()->json([
+            'message' => 'Logout successfull',
         ], 200);
     }
 
