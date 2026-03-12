@@ -21,7 +21,10 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $user = User::create($validated);
+        $user = User::create([
+            ...$validated,
+            'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/png?seed=' . $validated['username']
+        ]);
 
         return response()->json([
             'message' => 'Account created successfully',
@@ -31,9 +34,9 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $credentials = $request->validated();
+        $validated = $request->validated();
 
-        if (!$token = Auth::attempt($credentials)) {
+        if (!$token = Auth::attempt($validated)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
