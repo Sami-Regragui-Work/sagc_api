@@ -28,17 +28,21 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-
-        if (!Auth::attempt($credentials)) {
+        /** @var Auth $auth */
+        $auth = auth('api');
+        
+        if (!$token = $auth->attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = auth('api')->user();
 
         return response()->json([
             'message' => 'Login successful',
+            'token' => $token,
+            'type' => 'bearer',
             'user' => new UserResource($user),
         ], 200);
     }

@@ -14,19 +14,12 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return $this->resource
-            ->makeVisible([
-                'first_name',
-                'last_name',
-                'phone',
-                'country',
-                'address',
-                'city',
-                'postal_code',
-                'bio',
-                'avatar_url'
-            ])
-            ->makeHidden(['password'])
-            ->toArray();
+        $data = parent::toArray($request);
+
+        $data['birthdate'] = $this->birthdate?->format('Y-m-d');
+        $data['created_at'] = $this->created_at?->format('Y-m-d H:i:s');
+        $data['updated_at'] = $this->updated_at?->format('Y-m-d H:i:s');
+
+        return $data;
     }
 }
