@@ -52,12 +52,21 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function logout()
+    public function logout(): JsonResponse
     {
         Auth::logout();
 
         return response()->json([
             'message' => 'Logout successfull',
+        ], 200);
+    }
+
+    public function refresh(): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Token refreshed successfully',
+            'token'   => Auth::refresh(),
+            'type'    => 'bearer',
         ], 200);
     }
 
