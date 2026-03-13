@@ -1,0 +1,590 @@
+openapi: 3.0.3
+info:
+  title: Auth & Profile API
+  description: >-
+    RESTful API with JWT authentication. All protected routes require a Bearer
+    token in the Authorization header.
+
+
+    ## How to authenticate
+
+    1. Call `POST /register` or `POST /login` to get a token
+
+    2. Copy the `token` from the response
+
+    3. On every protected route, add the header: `Authorization: Bearer
+    <your_token>`
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter your JWT token obtained from /login or /register
+  schemas:
+    EmptyProfileUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: johndoe
+        email:
+          type: string
+          example: john@example.com
+        first_name:
+          type: string
+          nullable: true
+          example: null
+        last_name:
+          type: string
+          nullable: true
+          example: null
+        phone:
+          type: string
+          nullable: true
+          example: null
+        country:
+          type: string
+          nullable: true
+          example: null
+        address:
+          type: string
+          nullable: true
+          example: null
+        city:
+          type: string
+          nullable: true
+          example: null
+        postal_code:
+          type: string
+          nullable: true
+          example: null
+        birthdate:
+          type: string
+          nullable: true
+          example: null
+        bio:
+          type: string
+          nullable: true
+          example: null
+        avatar_url:
+          type: string
+          example: https://api.dicebear.com/7.x/avataaars/png?seed=johndoe
+        created_at:
+          type: string
+          example: "2024-01-01 12:00:00"
+        updated_at:
+          type: string
+          example: "2024-01-01 12:00:00"
+
+    FullProfileUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: johndoe
+        email:
+          type: string
+          example: john@example.com
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        phone:
+          type: string
+          example: "+1234567890"
+        country:
+          type: string
+          example: France
+        address:
+          type: string
+          example: 123 Main St
+        city:
+          type: string
+          example: Paris
+        postal_code:
+          type: string
+          example: "75001"
+        birthdate:
+          type: string
+          format: date
+          example: "1990-01-15"
+        bio:
+          type: string
+          example: Software developer
+        avatar_url:
+          type: string
+          example: https://api.dicebear.com/7.x/avataaars/png?seed=johndoe
+        created_at:
+          type: string
+          example: "2024-01-01 12:00:00"
+        updated_at:
+          type: string
+          example: "2024-01-02 15:30:00"
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The email field is required.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email:
+              - Email is required.
+            password:
+              - Password must be at least 8 characters.
+paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Creates a new user account. No authentication required.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+                - password_confirmation
+              properties:
+                username:
+                  type: string
+                  maxLength: 50
+                  example: johndoe
+                  description: Unique username (max 50 characters)
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: john@example.com
+                  description: Unique email address
+                password:
+                  type: string
+                  minLength: 8
+                  example: secret123
+                  description: Password (min 8 characters)
+                password_confirmation:
+                  type: string
+                  example: secret123
+                  description: Must match the password field
+      responses:
+        "201":
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Account created successfully
+                  user:
+                    $ref: "#/components/schemas/EmptyProfileUser"
+        "422":
+          description: Validation error (e.g. duplicate email/username, password too short)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+              examples:
+                duplicate_username:
+                  summary: Username already taken
+                  value:
+                    message: Username already taken.
+                    errors:
+                      username:
+                        - Username already taken.
+                duplicate_email:
+                  summary: Email already registered
+                  value:
+                    message: Email already registered.
+                    errors:
+                      email:
+                        - Email already registered.
+                password_too_short:
+                  summary: Password too short
+                  value:
+                    message: Password must be at least 8 characters.
+                    errors:
+                      password:
+                        - Password must be at least 8 characters.
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Login and get a JWT token
+      description: >-
+        Authenticates the user and returns a JWT Bearer token to use on
+        protected routes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  example: secret123
+      responses:
+        "200":
+          description: Login successful — use the returned token as a Bearer token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  type:
+                    type: string
+                    example: bearer
+                  user:
+                    $ref: "#/components/schemas/EmptyProfileUser"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid credentials
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+              example:
+                message: Email is required.
+                errors:
+                  email:
+                    - Email is required.
+  /logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout (invalidate token)
+      description: Invalidates the current JWT token. **Requires authentication.**
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successfull
+        "401":
+          description: Unauthenticated — token missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+  /refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh JWT token
+      description: >-
+        Issues a new JWT token using the current (non-expired) token. **Requires
+        authentication.**
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token refreshed successfully
+                  token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  type:
+                    type: string
+                    example: bearer
+        "401":
+          description: Unauthenticated — token missing, expired or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+  /me:
+    get:
+      tags:
+        - Profile
+      summary: Get current user profile
+      description: >-
+        Returns the authenticated user's full profile. **Requires
+        authentication.**
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Profile fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile fetched successfully
+                  user:
+                    $ref: "#/components/schemas/EmptyProfileUser"
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+    put:
+      tags:
+        - Profile
+      summary: Update current user profile
+      description: >-
+        Updates one or more profile fields for the authenticated user. All
+        fields are optional. **Requires authentication.**
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  maxLength: 255
+                  example: newusername
+                email:
+                  type: string
+                  format: email
+                  example: newemail@example.com
+                first_name:
+                  type: string
+                  maxLength: 255
+                  example: John
+                last_name:
+                  type: string
+                  maxLength: 255
+                  example: Doe
+                phone:
+                  type: string
+                  maxLength: 20
+                  example: "+1234567890"
+                country:
+                  type: string
+                  maxLength: 255
+                  example: France
+                address:
+                  type: string
+                  maxLength: 255
+                  example: 123 Main St
+                city:
+                  type: string
+                  maxLength: 255
+                  example: Paris
+                postal_code:
+                  type: string
+                  maxLength: 20
+                  example: "75001"
+                birthdate:
+                  type: string
+                  format: date
+                  example: "1990-01-15"
+                bio:
+                  type: string
+                  example: Full-stack developer
+                avatar_url:
+                  type: string
+                  format: uri
+                  example: https://example.com/avatar.png
+      responses:
+        "200":
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile updated successfully
+                  user:
+                    $ref: "#/components/schemas/FullProfileUser"
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+        "422":
+          description: Validation error (e.g. email already taken by another user)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+    delete:
+      tags:
+        - Profile
+      summary: Delete current user account
+      description: >-
+        Logs out and permanently deletes the authenticated user's account.
+        **Requires authentication.**
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Account deleted successfully
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+  /me/password:
+    put:
+      tags:
+        - Profile
+      summary: Update password
+      description: >-
+        Changes the authenticated user's password. Requires the current password
+        for verification. **Requires authentication.**
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - current_password
+                - new_password
+                - new_password_confirmation
+              properties:
+                current_password:
+                  type: string
+                  example: oldsecret123
+                  description: The user's current password
+                new_password:
+                  type: string
+                  minLength: 8
+                  example: newsecret456
+                  description: New password (min 8 characters)
+                new_password_confirmation:
+                  type: string
+                  example: newsecret456
+                  description: Must match new_password
+      responses:
+        "200":
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password updated successfully
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+        "422":
+          description: Current password incorrect or validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Current password is incorrect
+tags:
+  - name: Authentication
+    description: Register, login, logout and token management
+  - name: Profile
+    description: >-
+      Read and update the authenticated user's profile (🔒 all routes require
+      Bearer token)
