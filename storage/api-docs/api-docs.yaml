@@ -8,7 +8,7 @@ info:
 
     ## How to authenticate
 
-    1. Call `POST /register` or `POST /login` to get a token
+    1. Call `POST /register` then `POST /login` to get a token
 
     2. Copy the `token` from the response
 
@@ -24,7 +24,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Enter your JWT token obtained from /login or /register
+      description: Enter your JWT token obtained from /login
   schemas:
     EmptyProfileUser:
       type: object
