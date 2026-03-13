@@ -1,59 +1,203 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Authentication System and Profile Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API built with **Laravel 12** providing JWT-based authentication and user profile management.
 
-## About Laravel
+**Author:** Sami Regragui
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- <a href="#stack">Stack</a>
+- <a href="#requirements">Requirements</a>
+- <a href="#installation">Installation</a>
+- <a href="#configuration">Configuration</a>
+- <a href="#database">Database Setup</a>
+- <a href="#launch">Launch</a>
+- <a href="#api-docs">API Documentation</a>
+- <a href="#routes">Route Overview</a>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+<section id="stack">
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Stack
 
-## Laravel Sponsors
+| Layer | Technology |
+|---|---|
+| Language | PHP 8.5.3 |
+| Framework | Laravel 12.54.1 |
+| Authentication | JWT via `tymon/jwt-auth` |
+| Database | MySQL |
+| API Documentation | Swagger UI via `darkaonline/l5-swagger` |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+</section>
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+<section id="requirements">
 
-## Contributing
+## Requirements
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP >= 8.2
+- Composer
+- MySQL
+- `php artisan serve` (no Docker or Sail required)
 
-## Code of Conduct
+</section>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+<section id="installation">
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Installation
 
-## License
+**1. Clone the repository**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+**2. Install PHP dependencies**
+
+```bash
+composer install
+```
+
+**3. Copy the environment file**
+
+```bash
+cp .env.example .env
+```
+
+**4. Generate the application key**
+
+```bash
+php artisan key:generate
+```
+
+**5. Generate the JWT secret**
+
+```bash
+php artisan jwt:secret
+```
+
+</section>
+
+---
+
+<section id="configuration">
+
+## Configuration
+
+Open `.env` and fill in the following values:
+
+```env
+APP_NAME="Authentication System and Profile Management"
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+L5_SWAGGER_GENERATE_ALWAYS=false
+L5_FORMAT_TO_USE_FOR_DOCS=yaml
+```
+
+</section>
+
+---
+
+<section id="database">
+
+## Database Setup
+
+**1. Create the database** in MySQL:
+
+```sql
+CREATE DATABASE your_database_name;
+```
+
+**2. Run the migrations**
+
+```bash
+php artisan migrate
+```
+
+</section>
+
+---
+
+<section id="launch">
+
+## Launch
+
+```bash
+php artisan serve
+```
+
+The API is now available at `http://localhost:8000/api`.
+
+</section>
+
+---
+
+<section id="api-docs">
+
+## API Documentation
+
+This project uses **Swagger UI** served by [`darkaonline/l5-swagger`](https://github.com/DarkaOnLine/L5-Swagger), a Laravel wrapper around the OpenAPI standard. It was chosen because it integrates directly into the Laravel application with no external tools required — the documentation is accessible from the same server as the API and supports live "Try it out" testing from the browser.
+
+The OpenAPI specification file is located at:
+
+```
+storage/api-docs/api-docs.yaml
+```
+
+**Access the documentation at:**
+
+```
+http://localhost:8000/api/documentation
+```
+
+### How to authenticate in Swagger UI
+
+1. Call `POST /register` or `POST /login` using the **Try it out** button
+2. Copy the `token` value from the response
+3. Click the **Authorize** button at the top of the page
+4. Enter `Bearer <your_token>` in the value field and click **Authorize**
+5. All protected routes will now include the token automatically
+
+</section>
+
+---
+
+<section id="routes">
+
+## Route Overview
+
+### Public routes — no token required
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/register` | Create a new account |
+| POST | `/api/login` | Login and receive a JWT token |
+
+### Protected routes — `Authorization: Bearer <token>` header required
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/logout` | Invalidate the current token |
+| POST | `/api/refresh` | Issue a new token |
+| GET | `/api/me` | Get the authenticated user's profile |
+| PUT | `/api/me` | Update profile fields |
+| PUT | `/api/me/password` | Change password |
+| DELETE | `/api/me` | Delete account |
+
+For full request/response details, see the [API documentation](#api-docs).
+
+</section>
