@@ -25,16 +25,16 @@ class UpdateProfileRequest extends FormRequest
         return [
             'username' => 'sometimes|string|max:255|unique:users,username,' . Auth::id(),
             'email' => 'sometimes|email|unique:users,email,' . Auth::id(),
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'phone' => 'sometimes|string|max:20',
-            'country' => 'sometimes|string|max:255',
-            'address' => 'sometimes|string|max:255',
-            'city' => 'sometimes|string|max:255',
-            'postal_code' => 'sometimes|string|max:20',
-            'birthdate' => 'sometimes|date',
-            'bio' => 'sometimes|string',
-            'avatar_url' => 'sometimes|url',
+            'first_name' => 'sometimes|nullable|string|max:255',
+            'last_name' => 'sometimes|nullable|string|max:255',
+            'phone' => 'sometimes|nullable|string|max:20',
+            'country' => 'sometimes|nullable|string|max:255',
+            'address' => 'sometimes|nullable|string|max:255',
+            'city' => 'sometimes|nullable|string|max:255',
+            'postal_code' => 'sometimes|nullable|string|max:20',
+            'birthdate' => 'sometimes|nullable|date',
+            'bio' => 'sometimes|nullable|string',
+            'avatar_url' => 'sometimes|nullable|url',
         ];
     }
 }

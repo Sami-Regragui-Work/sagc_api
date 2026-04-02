@@ -194,8 +194,8 @@ http://localhost:8000/api/documentation
 | POST | `/api/logout` | Invalidate the current token |
 | POST | `/api/refresh` | Issue a new token |
 | GET | `/api/me` | Get the authenticated user's profile |
-| PUT | `/api/me` | Update profile fields |
-| PUT | `/api/me/password` | Change password |
+| PATCH | `/api/me` | Update profile fields |
+| PATCH | `/api/me/password` | Change password |
 | DELETE | `/api/me` | Delete account |
 
 For full request/response details, see the [API documentation](#api-docs).

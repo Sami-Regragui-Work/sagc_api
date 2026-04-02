@@ -394,7 +394,7 @@ paths:
                   message:
                     type: string
                     example: Unauthorized
-    put:
+    patch:
       tags:
         - Profile
       summary: Update current user profile
@@ -517,7 +517,7 @@ paths:
                     type: string
                     example: Unauthorized
   /me/password:
-    put:
+    patch:
       tags:
         - Profile
       summary: Update password
