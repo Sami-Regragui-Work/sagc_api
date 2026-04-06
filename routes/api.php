@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AvatarProxyController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\GoogleOAuthController;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('me/password', [ProfileController::class, 'updatePassword']);
     Route::delete('me', [ProfileController::class, 'destroy']);
 });
+
+Route::get('avatar-proxy', [AvatarProxyController::class, 'show']);
