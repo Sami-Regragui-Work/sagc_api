@@ -30,6 +30,7 @@ class UserResource extends JsonResource
             'avatar_url' => $this->avatar_url,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
+            'oauth_provider' => $this->oauth_provider,
         ];
     }
 }

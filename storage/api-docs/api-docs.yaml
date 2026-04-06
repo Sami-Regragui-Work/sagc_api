@@ -83,6 +83,10 @@ components:
         updated_at:
           type: string
           example: "2024-01-01 12:00:00"
+        oauth_provider:
+          type: string
+          nullable: true
+          example: null
 
     FullProfileUser:
       type: object
@@ -133,6 +137,10 @@ components:
         updated_at:
           type: string
           example: "2024-01-02 15:30:00"
+        oauth_provider:
+          type: string
+          nullable: true
+          example: google
     ValidationError:
       type: object
       properties:
