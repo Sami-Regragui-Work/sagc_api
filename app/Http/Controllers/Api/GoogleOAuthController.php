@@ -15,11 +15,11 @@ class GoogleOAuthController extends Controller
     {
         return Socialite::driver('google')
             ->stateless()
-            ->setScopes(['openid', 'email', 'profile'])
-            ->redirect([
-                'prompt' => 'select_account',
-                'approval_prompt' => 'force'
-            ]);
+            ->scopes(['openid', 'email', 'profile'])
+            ->with([
+                'prompt' => 'select_account'
+            ])
+            ->redirect();
     }
 
     public function callback()
