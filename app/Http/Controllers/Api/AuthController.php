@@ -26,8 +26,12 @@ class AuthController extends Controller
             'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/png?seed=' . $validated['username']
         ]);
 
+        Auth::login($user);
+        $token = JWTAuth::fromUser($user);
+
         return response()->json([
             'message' => 'Account created successfully',
+            'token' => $token,
             'user' => new UserResource($user),
         ], 201);
     }
