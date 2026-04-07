@@ -8,7 +8,7 @@ info:
 
     ## How to authenticate
 
-    1. Call `POST /register` then `POST /login` to get a token
+    1. Call `POST /register` or `POST /login` to get a token
 
     2. Copy the `token` from the response
 
@@ -208,6 +208,9 @@ paths:
                   message:
                     type: string
                     example: Account created successfully
+                  token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
                   user:
                     $ref: "#/components/schemas/EmptyProfileUser"
         "422":
