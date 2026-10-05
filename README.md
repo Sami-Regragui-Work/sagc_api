@@ -4,6 +4,8 @@ A RESTful API built with **Laravel 12** providing JWT-based authentication and u
 
 **Author:** Sami Regragui
 
+**Frontend Repository:** [sagc_vue](https://github.com/Sami-Regragui-Work/sagc_vue)
+
 ---
 
 ## Table of Contents
